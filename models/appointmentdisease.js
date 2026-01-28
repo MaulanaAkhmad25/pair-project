@@ -14,11 +14,17 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   AppointmentDisease.init({
-    AppointmentId: DataTypes.INTEGER,
-    DiseasesId: DataTypes.INTEGER
+    AppointmentId: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    DiseaseId: {                 
+      type: DataTypes.INTEGER,
+      allowNull: false
+    }
   }, {
     sequelize,
     modelName: 'AppointmentDisease',
-  });
+  })
   return AppointmentDisease;
 };
