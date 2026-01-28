@@ -1,0 +1,29 @@
+{
+  "name": "pair-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "contoh.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MaulanaAkhmad25/pair-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MaulanaAkhmad25/pair-project/issues"
+  },
+  "homepage": "https://github.com/MaulanaAkhmad25/pair-project#readme",
+  "dependencies": {
+    "ejs": "^4.0.1",
+    "express": "^5.2.1",
+    "pg": "^8.17.2",
+    "sequelize": "^6.37.7"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.6.5"
+  }
+}
