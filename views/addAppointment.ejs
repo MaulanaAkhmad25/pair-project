@@ -26,7 +26,7 @@
 
     <label>Diseases</label><br>
     <% diseases.forEach(ds => { %>
-      <input type="checkbox" name="DiseaseIds[]" value="<%= ds.id %>">
+      <input type="checkbox" name="disease_id[]" value="<%= ds.id %>">
       <%= ds.name %><br>
     <% }) %>
 
