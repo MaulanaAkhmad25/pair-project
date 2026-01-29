@@ -6,6 +6,7 @@ const {
   AppointmentDisease,
   User,
 } = require("../models");
+const bcrypt = require("bcryptjs");
 
 const { Op } = require("sequelize");
 const formatDate = require("../helpers/helper");
@@ -21,6 +22,9 @@ class Controller {
 
   static async regist(req, res) {
     try {
+      const { email, password, role } = req.body;
+      await User.create({ email, password, role });
+      res.redirect("/login");
     } catch (error) {
       req.send(error);
     }
@@ -28,7 +32,8 @@ class Controller {
 
   static async loginForm(req, res) {
     try {
-      res.render("login");
+      const { error } = req.query;
+      res.render("login", { error });
     } catch (error) {
       res.send(error);
     }
@@ -37,19 +42,45 @@ class Controller {
   static async login(req, res) {
     try {
       // dummy login (karena tidak ada admin & auth kompleks)
-      res.redirect("/patients");
+      const { email, password } = req.body;
+      const user = await User.findOne({ where: { email } });
+      // console.log(user);
+      if (user) {
+        const isValidPassword = bcrypt.compareSync(password, user.password);
+
+        if (isValidPassword) {
+          req.session.userId = user.id;
+          res.redirect("/patients");
+        } else {
+          const error = "Invalid username/password";
+          res.redirect(`/login?error=${error}`);
+        }
+      } else {
+        const error = "Invalid username/password";
+        res.redirect(`/login?error=${error}`);
+      }
     } catch (error) {
       res.send(error);
     }
   }
 
-  static async logout(req, res) {
-    try {
-      res.redirect("/login");
-    } catch (error) {
-      res.send(error);
-    }
+  static logout(req, res) {
+    req.session.destroy((err) => {
+      if (err) {
+        res.send(err);
+      } else {
+        res.redirect("/login");
+      }
+    });
   }
+
+  // static async logout(req, res) {
+  //   try {
+  //     res.redirect("/login");
+  //   } catch (error) {
+  //     res.send(error);
+  //   }
+  // }
 
   static async patients(req, res) {
     try {
@@ -140,8 +171,8 @@ class Controller {
 
   static async addAppointment(req, res) {
     try {
-      const { PatientId, DoctorId, complaint, DiseaseId } = req.body;
-      console.log(DiseaseId);
+      const { PatientId, DoctorId, complaint, disease_id } = req.body;
+      // console.log(DiseaseId);
 
       const appointment = await Appointment.create({
         PatientId,
@@ -151,11 +182,11 @@ class Controller {
       });
 
       // PROMISE CHAINING (REQUIREMENT)
-      const diseaseData = DiseaseId.map((diseaseId) => ({
-        AppointmentId: appointment.id,
-        DiseaseId: diseaseId,
+      const diseaseData = disease_id.map((diseaseId) => ({
+        appointment_id: appointment.id,
+        disease_id: diseaseId,
       }));
-      console.log(diseaseData);
+      // console.log(diseaseData);
 
       await AppointmentDisease.bulkCreate(diseaseData);
 

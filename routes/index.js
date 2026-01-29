@@ -13,6 +13,19 @@ router.get("/login", Controller.loginForm);
 router.post("/login", Controller.login);
 router.get("/logout", Controller.logout);
 
+router.use((req, res, next) => {
+  console.log(req.session);
+  if (!req.session.userId) {
+    const error = "Please login first!";
+    res.redirect(`/login?error=${error}`);
+  } else {
+    next();
+  }
+
+  // console.log("Time:", new Date());
+  // next();
+});
+
 router.get("/patients", Controller.patients);
 router.get("/patients/add", Controller.addPatientForm);
 router.post("/patients/add", Controller.addPatient);
