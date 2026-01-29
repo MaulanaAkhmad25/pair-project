@@ -20,15 +20,39 @@ class Controller {
     }
   }
 
-  static async regist(req, res) {
-    try {
-      const { email, password, role } = req.body;
-      await User.create({ email, password, role });
-      res.redirect("/login");
-    } catch (error) {
-      req.send(error);
+ static async regist(req, res) {
+  try {
+    const { name, email, password, role, specialist } = req.body;
+
+    // 1. create user
+    const user = await User.create({
+      email,
+      password,
+      role,
+    });
+
+    // 2. jika doctor → buat doctor
+    if (role === "doctor") {
+      await Doctor.create({
+        name,
+        specialist,
+        UserId: user.id,
+      });
     }
+
+    // 3. jika patient → buat patient
+    if (role === "patient") {
+      await Patient.create({
+        name,
+        UserId: user.id,
+      });
+    }
+
+    res.redirect("/login");
+  } catch (error) {
+    res.send(error);
   }
+}
 
   static async loginForm(req, res) {
     try {
