@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile</title>
+  </head>
+  <body>
+    <nav>
+      <h1>HaiDok</h1>
+      <%# JSON.stringify(userProfile) %>
+      <ul>
+        <li>
+          <a href="/patients">Home</a>
+        </li>
+        <li>
+          <a href="#">My Profile</a>
+        </li>
+        <li>
+          <a href="/patients/add">Add Patient</a>
+        </li>
+        <li>
+          <a href="/logout">Logout</a>
+        </li>
+      </ul>
+    </nav>
+    <h1>My Profile</h1>
+    <form action="/patients/<%= userProfile.UserId %>/profile" method="post">
+      <label for="name">Name </label>
+      <input type="text" name="name" id="name" value="<%= userProfile.name %>"/>
+      <br />
+
+      <label>Gender</label>
+
+        <% const genders = ["Pria", "Wanita"] %>
+        <% genders.forEach(gender => { %>
+         <input type="radio" name="gender" id="<%= gender %>" <%= userProfile.gender === gender ? "checked" : "" %>>
+         <label for="<%= gender %>"><%= gender %></label>
+        <% }) %>
+      <br>
+
+      <label for="dateOfBirth">Date Of Birth </label>
+      <input type="date" name="dateOfBirth" id="dateOfBirth">
+      <br>
+      <br>
+
+      <input type="submit" value="Submit">
+    </form>
+  </body>
+</html>

@@ -14,7 +14,9 @@ const formatDate = require("../helpers/helper");
 class Controller {
   static async registForm(req, res) {
     try {
-      res.render("regist");
+      const { error } = req.query;
+
+      res.render("regist", { error });
     } catch (error) {
       res.send(error);
     }
@@ -22,11 +24,17 @@ class Controller {
 
   static async regist(req, res) {
     try {
-      const { email, password, role } = req.body;
-      await User.create({ email, password, role });
+      const { name, email, password, role } = req.body;
+      const user = await User.create({ email, password, role });
+      await Patient.create({ name, UserId: user.id });
       res.redirect("/login");
     } catch (error) {
-      req.send(error);
+      if ((error.name = "SequelizeValidationError")) {
+        error = error.errors.map((el) => el.message).join(";");
+        res.redirect(`/regist?error=${error}`);
+      } else {
+        res.send(error);
+      }
     }
   }
 
@@ -85,6 +93,7 @@ class Controller {
   static async patients(req, res) {
     try {
       const { search } = req.query;
+      const { userId } = req.session;
 
       const option = {
         where: {},
@@ -99,7 +108,27 @@ class Controller {
       }
 
       const data = await Patient.findAll(option);
-      res.render("patients", { data });
+      res.render("patients", { data, userId });
+    } catch (error) {
+      res.send(error);
+    }
+  }
+
+  static async patientProfile(req, res) {
+    try {
+      const { id } = req.params;
+      let userProfile = await Patient.findOne({ where: { UserId: id } });
+      res.render("patientProfile", { userProfile });
+    } catch (error) {
+      res.send(error);
+    }
+  }
+
+  static async postPatientProfile(req, res) {
+    try {
+      const { id } = req.params;
+      let userProfile = await Patient.findOne({ where: { UserId: id } });
+      res.render("patientProfile", { userProfile });
     } catch (error) {
       res.send(error);
     }

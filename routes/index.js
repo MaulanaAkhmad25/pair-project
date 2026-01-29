@@ -29,6 +29,8 @@ router.use((req, res, next) => {
 router.get("/patients", Controller.patients);
 router.get("/patients/add", Controller.addPatientForm);
 router.post("/patients/add", Controller.addPatient);
+router.get("/patients/:id/profile", Controller.patientProfile);
+router.post("/patients/:id/profile", Controller.postPatientProfile);
 
 router.get("/doctors", Controller.doctors);
 router.get("/doctors/:id", Controller.doctorDetail);

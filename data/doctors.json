@@ -1,0 +1,34 @@
+[
+  {
+    "name": "Dr. Andi",
+    "specialist": "Dokter Umum"
+  },
+  {
+    "name": "Dr. Siti",
+    "specialist": "Penyakit Dalam"
+  },
+  {
+    "name": "Dr. Budi",
+    "specialist": "Spesialis Anak"
+  },
+  {
+    "name": "Dr. Rina",
+    "specialist": "Spesialis Kulit"
+  },
+  {
+    "name": "Dr. Dimas",
+    "specialist": "Penyakit Dalam"
+  },
+  {
+    "name": "Dr. Maya",
+    "specialist": "Dokter Umum"
+  },
+  {
+    "name": "Dr. Fajar",
+    "specialist": "Spesialis Anak"
+  },
+  {
+    "name": "Dr. Lestari",
+    "specialist": "Spesialis Kulit"
+  }
+]
