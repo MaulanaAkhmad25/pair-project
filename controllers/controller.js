@@ -91,28 +91,42 @@ class Controller {
   // }
 
   static async patients(req, res) {
-    try {
-      const { search } = req.query;
-      const { userId } = req.session;
+  try {
+    const { specialist } = req.query
+    const { userId } = req.session
 
-      const option = {
-        where: {},
-        order: [["name", "ASC"]],
-      };
+    const where = {}
 
-      // SEARCH menggunakan Op (REQUIREMENT)
-      if (search) {
-        option.where.name = {
-          [Op.iLike]: `%${search}%`,
-        };
-      }
-
-      const data = await Patient.findAll(option);
-      res.render("patients", { data, userId });
-    } catch (error) {
-      res.send(error);
+    if (specialist && specialist !== 'all') {
+      where.specialist = specialist
     }
+
+    const doctors = await Doctor.findAll({
+      where,
+      order: [['name', 'ASC']]
+    })
+
+    // ambil spesialis unik untuk dropdown
+    const specialistsRaw = await Doctor.findAll({
+      attributes: ['specialist'],
+      group: ['specialist']
+    })
+
+    const specialists = specialistsRaw.map(d => d.specialist)
+
+    res.render("patients", {
+      doctors,
+      specialists,
+      selectedSpecialist: specialist || 'all',
+      userId
+    })
+  } catch (error) {
+    res.send(error)
   }
+}
+
+
+
 
   static async patientProfile(req, res) {
     try {
