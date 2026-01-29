@@ -1,56 +1,56 @@
 [
   {
     "id": 1,
-    "name": "Dr. Andi",
+    "name": "dr. Andi Saputra",
     "specialist": "Dokter Umum",
     "price": 30000,
     "photo": "doctor-ironman.png"
   },
   {
     "id": 2,
-    "name": "Dr. Siti",
+    "name": "dr. Siti Aminah, Sp.PD",
     "specialist": "Penyakit Dalam",
     "price": 50000,
     "photo": "doctor-wonderwoman.png"
   },
   {
     "id": 3,
-    "name": "Dr. Budi",
+    "name": "dr. Budi Wijayanto, Sp.A",
     "specialist": "Spesialis Anak",
     "price": 45000,
     "photo": "doctor-spiderman.png"
   },
   {
     "id": 4,
-    "name": "Dr. Rina",
+    "name": "dr. Rina Karina, Sp.DVE",
     "specialist": "Spesialis Kulit",
     "price": 60000,
     "photo": "doctor-captainmarvel.png"
   },
   {
     "id": 5,
-    "name": "Dr. Dimas",
+    "name": "dr. Dimas Masandra, Sp.PD",
     "specialist": "Penyakit Dalam",
     "price": 55000,
     "photo": "doctor-batman.png"
   },
   {
     "id": 6,
-    "name": "Dr. Maya",
+    "name": "dr. Mayang Sari Wijaya",
     "specialist": "Dokter Umum",
     "price": 30000,
     "photo": "doctor-supergirl.png"
   },
   {
     "id": 7,
-    "name": "Dr. Fajar",
+    "name": "dr. Fajar Happy Boy, Sp.A",
     "specialist": "Spesialis Anak",
     "price": 45000,
     "photo": "doctor-flash.png"
   },
   {
     "id": 8,
-    "name": "Dr. Lestari",
+    "name": "dr. Lestari Kumala, Sp.KK",
     "specialist": "Spesialis Kulit",
     "price": 60000,
     "photo": "doctor-scarletwitch.png"

@@ -106,7 +106,6 @@ class Controller {
       order: [['name', 'ASC']]
     })
 
-    // ambil spesialis unik untuk dropdown
     const specialistsRaw = await Doctor.findAll({
       attributes: ['specialist'],
       group: ['specialist']
@@ -114,11 +113,17 @@ class Controller {
 
     const specialists = specialistsRaw.map(d => d.specialist)
 
+    // 🔥 AMBIL DATA PATIENT LOGIN
+    const patient = await Patient.findOne({
+      where: { UserId: userId }
+    })
+
     res.render("patients", {
       doctors,
       specialists,
       selectedSpecialist: specialist || 'all',
-      userId
+      userId,
+      patient      // ⬅️ KIRIM KE EJS
     })
   } catch (error) {
     res.send(error)
@@ -128,25 +133,42 @@ class Controller {
 
 
 
+
   static async patientProfile(req, res) {
-    try {
-      const { id } = req.params;
-      let userProfile = await Patient.findOne({ where: { UserId: id } });
-      res.render("patientProfile", { userProfile });
-    } catch (error) {
-      res.send(error);
-    }
+  try {
+    const { id } = req.params
+    const isEdit = req.query.edit === 'true'
+
+    const userProfile = await Patient.findOne({
+      where: { UserId: id }
+    })
+
+    res.render("patientProfile", {
+      userProfile,
+      isEdit
+    })
+  } catch (error) {
+    res.send(error)
   }
+}
+
 
   static async postPatientProfile(req, res) {
-    try {
-      const { id } = req.params;
-      let userProfile = await Patient.findOne({ where: { UserId: id } });
-      res.render("patientProfile", { userProfile });
-    } catch (error) {
-      res.send(error);
-    }
+  try {
+    const { id } = req.params
+    const { name, gender, dateOfBirth } = req.body
+
+    await Patient.update(
+      { name, gender, dateOfBirth },
+      { where: { UserId: id } }
+    )
+
+    res.redirect(`/patients/${id}/profile`)
+  } catch (error) {
+    res.send(error)
   }
+}
+
 
   static async addPatientForm(req, res) {
     try {
