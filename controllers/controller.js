@@ -7,6 +7,7 @@ const {
   User,
 } = require("../models");
 const bcrypt = require("bcryptjs");
+const sendEmail = require("../helpers/sendEmail");
 
 const { Op } = require("sequelize");
 const formatDate = require("../helpers/helper");
@@ -27,6 +28,11 @@ class Controller {
       const { name, email, password, role } = req.body;
       const user = await User.create({ email, password, role });
       await Patient.create({ name, UserId: user.id });
+      await sendEmail({
+        to: user.email,
+        subject: "Registrasi Berhasil",
+        text: "Akun kamu berhasil dibuat",
+      });
       res.redirect("/login");
     } catch (error) {
       if ((error.name = "SequelizeValidationError")) {
@@ -49,10 +55,8 @@ class Controller {
 
   static async login(req, res) {
     try {
-      // dummy login (karena tidak ada admin & auth kompleks)
       const { email, password } = req.body;
       const user = await User.findOne({ where: { email } });
-      // console.log(user);
       if (user) {
         const isValidPassword = bcrypt.compareSync(password, user.password);
 
@@ -82,93 +86,78 @@ class Controller {
     });
   }
 
-  // static async logout(req, res) {
-  //   try {
-  //     res.redirect("/login");
-  //   } catch (error) {
-  //     res.send(error);
-  //   }
-  // }
-
   static async patients(req, res) {
-  try {
-    const { specialist } = req.query
-    const { userId } = req.session
+    try {
+      const { specialist } = req.query;
+      const { userId } = req.session;
 
-    const where = {}
+      const where = {};
 
-    if (specialist && specialist !== 'all') {
-      where.specialist = specialist
+      if (specialist && specialist !== "all") {
+        where.specialist = specialist;
+      }
+
+      const doctors = await Doctor.findAll({
+        where,
+        order: [["name", "ASC"]],
+      });
+
+      const specialistsRaw = await Doctor.findAll({
+        attributes: ["specialist"],
+        group: ["specialist"],
+      });
+
+      const specialists = specialistsRaw.map((d) => d.specialist);
+
+      const patient = await Patient.findOne({
+        where: { UserId: userId },
+      });
+
+      res.render("patients", {
+        doctors,
+        specialists,
+        selectedSpecialist: specialist || "all",
+        userId,
+        patient,
+      });
+    } catch (error) {
+      res.send(error);
     }
-
-    const doctors = await Doctor.findAll({
-      where,
-      order: [['name', 'ASC']]
-    })
-
-    const specialistsRaw = await Doctor.findAll({
-      attributes: ['specialist'],
-      group: ['specialist']
-    })
-
-    const specialists = specialistsRaw.map(d => d.specialist)
-
-    // 🔥 AMBIL DATA PATIENT LOGIN
-    const patient = await Patient.findOne({
-      where: { UserId: userId }
-    })
-
-    res.render("patients", {
-      doctors,
-      specialists,
-      selectedSpecialist: specialist || 'all',
-      userId,
-      patient      // ⬅️ KIRIM KE EJS
-    })
-  } catch (error) {
-    res.send(error)
   }
-}
-
-
-
-
 
   static async patientProfile(req, res) {
-  try {
-    const { id } = req.params
-    const isEdit = req.query.edit === 'true'
+    try {
+      const { id } = req.params;
+      const isEdit = req.query.edit === "true";
 
-    const userProfile = await Patient.findOne({
-      where: { UserId: id }
-    })
+      const userProfile = await Patient.findOne({
+        where: { UserId: id },
+      });
 
-    res.render("patientProfile", {
-      userProfile,
-      isEdit
-    })
-  } catch (error) {
-    res.send(error)
+      res.render("patientProfile", {
+        userProfile,
+        isEdit,
+      });
+    } catch (error) {
+      res.send(error);
+    }
   }
-}
-
 
   static async postPatientProfile(req, res) {
-  try {
-    const { id } = req.params
-    const { name, gender, dateOfBirth } = req.body
+    try {
+      const { id } = req.params;
+      const { name, gender, dateOfBirth } = req.body;
 
-    await Patient.update(
-      { name, gender, dateOfBirth },
-      { where: { UserId: id } }
-    )
+      await Patient.update(
+        { name, gender, dateOfBirth },
+        { where: { UserId: id } },
+      );
 
-    res.redirect(`/patients/${id}/profile`)
-  } catch (error) {
-    res.send(error)
+      res.redirect(`/patients/${id}/profile`);
+    } catch (error) {
+      res.send(error);
+    }
   }
-}
-
 
   static async addPatientForm(req, res) {
     try {
@@ -207,12 +196,12 @@ class Controller {
 
   static async appointments(req, res) {
     try {
-      const data = await Appointment.findAll({
-        include: [Patient, Doctor],
-        order: [["createdAt", "DESC"]],
-      });
+      const { startDate, endDate } = req.query;
+      const { userId } = req.session;
 
-      res.render("appointments", { data, formatDate });
+      const data = await Appointment.getAllAppointment(startDate, endDate);
+
+      res.render("appointments", { data, userId, formatDate });
     } catch (error) {
       res.send(error);
     }
@@ -220,7 +209,9 @@ class Controller {
 
   static async addAppointmentForm(req, res) {
     try {
-      const patients = await Patient.findAll();
+      const { doctorId } = req.query;
+      const { userId } = req.session;
+      const patients = await Patient.findOne({ where: { UserId: userId } });
       const doctors = await Doctor.findAll();
       const diseases = await Disease.findAll();
 
@@ -228,6 +219,8 @@ class Controller {
         patients,
         doctors,
         diseases,
+        doctorId,
+        userId,
       });
     } catch (error) {
       res.send(error);
@@ -237,7 +230,6 @@ class Controller {
   static async addAppointment(req, res) {
     try {
       const { PatientId, DoctorId, complaint, disease_id } = req.body;
-      // console.log(DiseaseId);
 
       const appointment = await Appointment.create({
         PatientId,
@@ -246,12 +238,10 @@ class Controller {
         status: "pending",
       });
 
-      // PROMISE CHAINING (REQUIREMENT)
       const diseaseData = disease_id.map((diseaseId) => ({
         appointment_id: appointment.id,
         disease_id: diseaseId,
       }));
-      // console.log(diseaseData);
 
       await AppointmentDisease.bulkCreate(diseaseData);
 
@@ -263,11 +253,12 @@ class Controller {
 
   static async appointmentDetail(req, res) {
     try {
+      const { userId } = req.session;
       const data = await Appointment.findByPk(req.params.id, {
         include: [Patient, Doctor, Disease],
       });
 
-      res.render("appointmentDetail", { data });
+      res.render("appointmentDetail", { data, userId });
     } catch (error) {
       res.send(error);
     }
@@ -275,12 +266,13 @@ class Controller {
 
   static async deleteAppointment(req, res) {
     try {
+      const { id } = req.params;
       await AppointmentDisease.destroy({
-        where: { AppointmentId: req.params.id },
+        where: { appointment_id: id },
       });
 
       await Appointment.destroy({
-        where: { id: req.params.id },
+        where: { id },
       });
 
       res.redirect("/appointments");
