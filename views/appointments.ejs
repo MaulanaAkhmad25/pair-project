@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appoinments</title>
+</head>
+<body>
+    <h1>Appoinments</h1>
+    
+    <a href="/appointments/add">Add Appointment</a> |
+    <a href="/patients">Patients</a>
+
+  <table border="1">
+    <tr>
+      <th>Patient</th>
+      <th>Doctor</th>
+      <th>Status</th>
+      <th>Date</th>
+      <th>Action</th>
+    </tr>
+
+    <% data.forEach(el => { %>
+      <tr>
+        <td><%= el.Patient.name %></td>
+        <td><%= el.Doctor.name %></td>
+        <td><%= el.status %></td>
+        <td><%= formatDate(el.createdAt) %></td>
+        <td>
+          <a href="/appointments/<%= el.id %>">Detail</a> |
+          <a href="/appointments/<%= el.id %>/delete"
+             onclick="return confirm('Are you sure?')">Delete</a>
+        </td>
+      </tr>
+    <% }) %>
+</body>
+</html>

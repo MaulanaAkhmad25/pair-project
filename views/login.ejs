@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | HaiDok</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1e88e5, #42a5f5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background: #ffffff;
+      width: 380px;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 25px;
+    }
+
+    .header h1 {
+      color: #1e88e5;
+      margin-bottom: 5px;
+    }
+
+    .header p {
+      font-size: 14px;
+      color: #666;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #1e88e5;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #1e88e5;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #1565c0;
+    }
+
+    .error {
+      background: #ffe5e5;
+      color: #c62828;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 15px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .footer {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .footer a {
+      color: #1e88e5;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .footer a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <div class="header">
+      <h1>HaiDoc! 🩺💊</h1>
+      <p>Menghubungkan Anda dengan dokter secara mudah</p>
+    </div>
+
+    <% if (error) { %>
+      <div class="error"><%= error %></div>
+    <% } %>
+
+    <form action="/login" method="POST">
+
+      <label>Email</label>
+      <input type="email" name="email" placeholder="example@email.com" required />
+
+      <label>Password</label>
+      <input type="password" name="password" placeholder="********" required />
+
+      <label>Anda Sebagai?</label>
+      <select name="role" required>
+        <option value="">-- Pilih Role --</option>
+        <option value="doctor">Doctor</option>
+        <option value="patient">Patient</option>
+      </select>
+
+      <button type="submit">Login</button>
+    </form>
+
+    <div class="footer">
+      <p>Belum punya akun?</p>
+      <a href="/regist">Registrasi Sekarang</a>
+    </div>
+
+  </div>
+</body>
+</html>

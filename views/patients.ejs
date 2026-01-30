@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient</title>
+</head>
+<body>
+    <h1>Patients</h1>
+    <a href="/logout">Logout</a> |
+    <a href="/patients/add">Add Patient</a>
+
+    <form method="get">
+        <input type="text" name="search" placeholder="Search patient name">
+        <button>Search</button>
+    </form>
+
+    <table border="1" cellpadding="5">
+        <tr>
+            <th>Name</th>
+            <th>Gender</th>
+            <th>Age</th>
+        </tr>
+
+            <% data.forEach(p => { %>
+                <tr>
+                    <td><%= p.name %></td>
+                    <td><%= p.gender %></td>
+                    <td><%= p.age %> years</td>
+                </tr>
+            <% }) %>
+    </table>
+
+    <br>
+    <a href="/appointments">Go to Appointments</a>
+
+    
+</body>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Appointment</title>
+</head>
+<body>
+    <form action="/appointments/add" method="POST">
+    <label>Patient</label><br>
+    <select name="PatientId">
+      <% patients.forEach(p => { %>
+        <option value="<%= p.id %>"><%= p.name %></option>
+      <% }) %>
+    </select><br><br>
+
+    <label>Doctor</label><br>
+    <select name="DoctorId">
+      <% doctors.forEach(d => { %>
+        <option value="<%= d.id %>"><%= d.name %></option>
+      <% }) %>
+    </select><br><br>
+
+    <label>Complaint</label><br>
+    <textarea name="complaint"></textarea><br><br>
+
+    <label>Diseases</label><br>
+    <% diseases.forEach(ds => { %>
+      <input type="checkbox" name="disease_id[]" value="<%= ds.id %>">
+      <%= ds.name %><br>
+    <% }) %>
+
+    <br>
+    <button type="submit">Submit</button>
+  </form>
+
+  <br>
+  <a href="/appointments">Back</a>
+    
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Register | HaiDok</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      background: linear-gradient(135deg, #1e88e5, #42a5f5);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .card {
+      background: white;
+      width: 420px;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    }
+
+    .title {
+      text-align: center;
+      margin-bottom: 10px;
+      color: #1e88e5;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #1e88e5;
+    }
+
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      background-color: #1e88e5;
+      color: white;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn:hover {
+      background-color: #1565c0;
+    }
+
+    .login-link {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .login-link a {
+      color: #1e88e5;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .hospital-icon {
+      text-align: center;
+      font-size: 40px;
+      margin-bottom: 10px;
+    }
+
+    .specialist-wrapper {
+      display: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="card">
+
+    <div class="hospital-icon">🏥</div>
+
+    <h1 class="title">HaiDoc! 🩺💊</h1>
+    <p class="subtitle">
+      Daftar sekarang dan mulai terhubung dengan dokter terpercaya
+    </p>
+
+    <form action="/regist" method="POST">
+
+      <label>Name</label>
+      <input type="text" name="name" required />
+
+      <label>Email</label>
+      <input type="email" name="email" required />
+
+      <label>Password</label>
+      <input type="password" name="password" required />
+
+      <label>Role</label>
+      <select name="role" id="role" onchange="toggleSpecialist()" required>
+        <option value="">-- Choose Role --</option>
+        <option value="patient">Patient</option>
+        <option value="doctor">Doctor</option>
+      </select>
+
+      <div class="specialist-wrapper" id="specialistWrapper">
+        <label>Doctor Specialist</label>
+        <input
+          type="text"
+          name="specialist"
+          placeholder="ex: Cardiologist, Dentist, Pediatrician"
+        />
+      </div>
+
+      <button type="submit" class="btn">Create Account</button>
+
+    </form>
+
+    <div class="login-link">
+      Already have an account?
+      <a href="/login">Login</a>
+    </div>
+
+  </div>
+
+  <script>
+    function toggleSpecialist() {
+      const role = document.getElementById('role').value
+      const specialistWrapper = document.getElementById('specialistWrapper')
+
+      if (role === 'doctor') {
+        specialistWrapper.style.display = 'block'
+      } else {
+        specialistWrapper.style.display = 'none'
+      }
+    }
+  </script>
+</body>
+</html>

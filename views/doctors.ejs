@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Doctors</title>
+</head>
+<body>
+    <h1>Doctors</h1>
+
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Specialist</th>
+        </tr>
+
+        <% data.forEach(el => { %>
+            <tr>
+                <td><%= el.name %></td>
+                <td><%= el.specilaist %></td>
+            </tr>
+       <% }) %>
+    </table>
+
+    <br>
+    <a href="/appointments">Back to Appoinments</a>
+    
+</body>
+</html>
