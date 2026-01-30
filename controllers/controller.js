@@ -42,7 +42,20 @@ class Controller {
         res.send(error);
       }
     }
+
+    // 3. jika patient → buat patient
+    if (role === "patient") {
+      await Patient.create({
+        name,
+        UserId: user.id,
+      });
+    }
+
+    res.redirect("/login");
+  } catch (error) {
+    res.send(error);
   }
+}
 
   static async loginForm(req, res) {
     try {
