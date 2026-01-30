@@ -1,26 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Appointment Detail</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  />
+  <title>Appointment Detail</title>
 </head>
-<body>
-    <h1>Appointment Detail</h1>
+<body class="bg-light">
 
-    <p><b>Patient:</b> <%= data.Patient.name %></p>
-    <p><b>Doctor:</b> <%= data.Doctor.name %></p>
-    <p><b>Status:</b> <%= data.status %></p>
-    <p><b>Complaint:</b> <%= data.complaint %></p>
+  <nav class="navbar navbar-dark bg-primary px-4">
+    <span class="navbar-brand fw-bold">HaiDoc 🩺💊</span>
 
-    <p><b>Diseases:</b></p>
-    <ul>
-        <% data.Diseases.forEach(d => { %>
-            <li><%= d.name %></li>
-         <% }) %>
-    </ul>
+    <div class="ms-auto d-flex gap-2">
+      <a href="/patients/" class="btn btn-outline-light btn-sm">
+        Home
+      </a>
+      <a href="/patients/<%= userId %>/profile" class="btn btn-outline-light btn-sm">
+        My Profile
+      </a>
+      <a href="/logout" class="btn btn-outline-light btn-sm">
+        Logout
+      </a>
+    </div>
+  </nav>
 
-  <a href="/appointments">Back</a>
-    
+  <div class="container mt-4">
+    <h1 class="mb-4">Appointment Detail</h1>
+
+    <div class="card shadow-sm">
+      <div class="card-body">
+
+        <p class="mb-2">
+          <strong>Patient:</strong> <%= data.Patient.name %>
+        </p>
+
+        <p class="mb-2">
+          <strong>Doctor:</strong> <%= data.Doctor.name %>
+        </p>
+
+        <p class="mb-2">
+          <strong>Status:</strong>
+          <span class="badge bg-info text-dark">
+            <%= data.status %>
+          </span>
+        </p>
+
+        <p class="mb-3">
+          <strong>Complaint:</strong><br />
+          <%= data.complaint %>
+        </p>
+
+        <p class="mb-2"><strong>Diseases:</strong></p>
+        <ul class="list-group list-group-flush mb-3">
+          <% data.Diseases.forEach(d => { %>
+            <li class="list-group-item">
+              <%= d.name %>
+            </li>
+          <% }) %>
+        </ul>
+
+        <a href="/appointments" class="btn btn-secondary">
+          Back
+        </a>
+
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

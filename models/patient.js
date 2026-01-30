@@ -1,5 +1,5 @@
-'use strict';
-const {Model} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Patient extends Model {
     /**
@@ -8,44 +8,42 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Patient.belongsTo(models.User)
-      Patient.hasMany(models.Appointment)
+      Patient.belongsTo(models.User);
+      Patient.hasMany(models.Appointment);
     }
 
     static findWithUser() {
-      return this.findAll({ include: 'User' })
+      return this.findAll({ include: "User" });
     }
 
     get age() {
-     if (!this.birthDate) {
-    return '-'
-    }
+      if (!this.birthDate) {
+        return "-";
+      }
 
-    const now = new Date()
-      return now.getFullYear() - this.birthDate.getFullYear()
-      }
+      const now = new Date();
+      return now.getFullYear() - this.birthDate.getFullYear();
     }
-    
-  Patient.init({
-    UserId: DataTypes.INTEGER,
-    name: {
-      type: DataTypes.STRING,
-      allowNull: false,
-      validate: {
-        notNull: { msg: 'Name is Required' },
-        notEmpty: { msg: 'Name cannot be empty' }
-      }
+  }
+
+  Patient.init(
+    {
+      UserId: DataTypes.INTEGER,
+      name: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notNull: { msg: "Name is Required" },
+          notEmpty: { msg: "Name cannot be empty" },
+        },
+      },
+      gender: DataTypes.STRING,
+      dateOfBirth: DataTypes.DATE,
     },
-    gender: DataTypes.STRING,
-    dateOfBirth: DataTypes.DATE
-  }, {
-    sequelize,
-    modelName: 'Patient',
-    hooks:{
-      beforeCreate(patient){
-        patient.name = patient.name.toUpperCase()
-      }
-    }
-  });
+    {
+      sequelize,
+      modelName: "Patient",
+    },
+  );
   return Patient;
 };

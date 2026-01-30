@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+const { Op } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Appointment extends Model {
     /**
@@ -18,6 +19,34 @@ module.exports = (sequelize, DataTypes) => {
       Appointment.hasMany(models.AppointmentDisease, {
         foreignKey: "appointment_id",
       });
+    }
+
+    static async getAllAppointment(startDate, endDate) {
+      const { Patient, Doctor } = require("./index");
+
+      let opt = {
+        where: {},
+        include: [Patient, Doctor],
+        order: [["createdAt", "DESC"]],
+      };
+
+      if (startDate && endDate) {
+        startDate = new Date(startDate);
+        endDate = new Date(endDate);
+
+        opt.where.createdAt = {
+          [Op.between]: [startDate, endDate],
+        };
+      }
+
+      if (startDate) {
+        startDate = new Date(startDate);
+        opt.where.createdAt = {
+          [Op.gte]: startDate,
+        };
+      }
+
+      return Appointment.findAll(opt);
     }
   }
   Appointment.init(
